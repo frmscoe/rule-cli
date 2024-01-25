@@ -115,7 +115,7 @@ rule-cli remove -m rule-executor
 
 ## Contributing
 
-If you'd like to contribute to `rule-cli`, please check out the [GitHub repository](https://github.com/your-username/rule-cli) and submit a pull request.
+If you'd like to contribute to `rule-cli`, please check out the [GitHub repository](https://github.com/frmscoe/rule-cli) and submit a pull request.
 
 
 ---
