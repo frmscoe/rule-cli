@@ -6,5 +6,3 @@ coverage
 cli
 **/node_modules
 *.spec.ts
-src/init/templates/*
-src/init/templates/returner-typescript/*
