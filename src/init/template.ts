@@ -7,6 +7,7 @@ import { updateLoadingIndicator } from '../common/loader';
 
 const handleTemplating = async (): Promise<void> => {
   // The response from all of the questions
+
   let response: any = {};
 
   // Get the script's directory
@@ -66,6 +67,15 @@ const handleTemplating = async (): Promise<void> => {
         : true,
   });
 
+  if (!shell.env.GH_TOKEN) {
+    questions.push({
+      type: 'text',
+      name: 'github',
+      initial: 'GIT-HUB-TOKEN-KEY',
+      message: 'Enter your GitHub token',
+    });
+  }
+
   // Ask which template to use if there's more than one
   if (templates.length > 1) {
     questions.push({
@@ -90,6 +100,10 @@ const handleTemplating = async (): Promise<void> => {
   // The response
   response = await prompts(questions, { onCancel });
 
+  if (response.github) {
+    shell.env.GH_TOKEN = response.github;
+  }
+
   // if there's only one template then set the first template to be the template on the response
   if (typeof response.template === 'undefined') {
     response.template = templates[0].dir;
@@ -113,6 +127,8 @@ const handleTemplating = async (): Promise<void> => {
 
       // Copy the template
       await copyTemplate(response.name, response.template, response.org);
+    } else {
+      return;
     }
   } else {
     // Copy the template
@@ -127,12 +143,58 @@ const handleTemplating = async (): Promise<void> => {
     150,
   );
   shell.cd(response.name);
+
   const childProcess = shell.exec('npm i', { async: true });
 
   // Handle exit event
-  childProcess.on('exit', (code) => {
+  childProcess.on('exit', async (code) => {
     if (code === 0) {
       console.log('\nInstalling dependencies has completed');
+
+      shell.exec('npm run build');
+
+      shell.exec('npm pack');
+
+      const ruleVersion = (await fs.readJsonSync('./package.json'))
+        .version as string;
+      const ruleName = (
+        (await fs.readJsonSync('./package.json')).name as string
+      ).replace('@frmscoe/', '');
+
+      const currentCliDir = process.cwd();
+
+      shell.mkdir(`${scriptDir}/start/local-rules`);
+
+      shell.mv(
+        `-f`,
+        `${currentCliDir}/frmscoe-${ruleName}-${ruleVersion}.tgz`,
+        `${scriptDir}/start/local-rules`,
+      );
+
+      shell.cd(`${scriptDir}/module/modules/rule-executer`);
+
+      shell.sed(
+        '-i',
+        /FUNCTION_NAME.*/,
+        `FUNCTION_NAME='${ruleName}'`,
+        `${scriptDir}/module/modules/rule-executer/.env`,
+      );
+
+      const rulename = ruleName.replace('rule-', '');
+      shell.sed(
+        '-i',
+        /RULE_NAME=.*/,
+        `RULE_NAME='${rulename}'`,
+        `${scriptDir}/module/modules/rule-executer/.env`,
+      );
+
+      shell.exec(
+        `npm i rule@file:${scriptDir}/start/local-rules/frmscoe-${ruleName}-${ruleVersion}.tgz`,
+      );
+
+      shell.exec(`npm run build`);
+
+      shell.exec(`npm run start`);
     } else {
       console.error(`\nError installing dependecy err with ${code}`);
     }
@@ -143,6 +205,7 @@ const handleTemplating = async (): Promise<void> => {
 // Copy the template
 async function copyTemplate(name: string, template: string, orgName: string) {
   // Copy all of the files except the template.json file
+
   const destFileUrls: string[] = [''];
   await fs
     .copy(template, name, {
@@ -162,22 +225,30 @@ async function copyTemplate(name: string, template: string, orgName: string) {
     .catch((error) => console.error('Error:', error));
 
   for (const currentPath of destFileUrls) {
-    if (currentPath.includes('rule-000.ts')) {
-      const destFileName = currentPath.replace('rule-000.ts', `${name}.ts`);
-      await fs.rename(currentPath, destFileName);
-    }
-
     if (
       currentPath.includes('index.ts') ||
       currentPath.includes('publish.yml') ||
       currentPath.includes('rule.test.ts') ||
       currentPath.includes('jest.config.ts') ||
       currentPath.includes('README.md') ||
-      currentPath.includes('package.json')
+      currentPath.includes('package.json') ||
+      currentPath.includes('.npmrc') ||
+      currentPath.includes(`rule-000.ts`)
     ) {
-      await editContentOfFile(currentPath, name, orgName);
+      await editContentOfFile(
+        currentPath,
+        name,
+        orgName,
+        orgName.replace('@', ''),
+      );
+    }
+
+    if (currentPath.includes('rule-000.ts')) {
+      const destFileName = currentPath.replace('rule-000.ts', `${name}.ts`);
+      await fs.rename(currentPath, destFileName);
     }
   }
+
   console.log('Completed copying the template');
 }
 
@@ -185,14 +256,19 @@ async function editContentOfFile(
   filePath: string,
   rulename: string,
   orgName: string,
+  noAtOrgname: string,
 ): Promise<void> {
   try {
     // Read the content of the file
     const fileContent = await fs.readFile(filePath, 'utf-8');
+    if (filePath.includes(`${rulename}.ts`)) {
+      console.log(fileContent);
+    }
 
     // Perform your modifications on the content (example: replace a placeholder with newName)
     let modifiedContent = fileContent.replace(/{{rulename}}/g, rulename);
     modifiedContent = modifiedContent.replace(/{{orgname}}/g, orgName);
+    modifiedContent = modifiedContent.replace(/{{noatorgname}}/g, noAtOrgname);
 
     // Write the modified content back to the file
     await fs.writeFile(filePath, modifiedContent, 'utf-8');

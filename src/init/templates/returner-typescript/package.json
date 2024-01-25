@@ -1,13 +1,13 @@
 {
   "name": "{{orgname}}/{{rulename}}",
   "version": "0.0.1",
-  "description": "Desciption of {{rulename}}",
+  "description": "Desciption of {{rulename}} from {{noatorgname}} organisation",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "publishConfig": {
     "@frmscoe:registry": "https://npm.pkg.github.com/"
   },
-  "homepage": "https://github.com/frmscoe/{{rulename}}#readme",
+  "homepage": "https://github.com/{{noatorgname}}/{{rulename}}#readme",
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "cleanup": "rm -rf lib coverage jest.config.js.map node_modules package-lock.json",
@@ -27,7 +27,7 @@
   ],
   "license": "ISC",
   "dependencies": {
-    "@frmscoe/frms-coe-lib": "^2.0.0"
+    "{{orgname}}/frms-coe-lib": "^2.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",

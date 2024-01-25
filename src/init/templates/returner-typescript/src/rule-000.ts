@@ -4,12 +4,12 @@ import {
   type DatabaseManagerInstance,
   type LoggerService,
   type ManagerConfig,
-} from '@frmscoe/frms-coe-lib';
+} from '{{orgname}}/frms-coe-lib';
 import {
   type RuleConfig,
   type RuleRequest,
   type RuleResult,
-} from '@frmscoe/frms-coe-lib/lib/interfaces';
+} from '{{orgname}}/frms-coe-lib/lib/interfaces';
 
 // This function is imported by the rule executor
 export async function handleTransaction(

@@ -5,16 +5,16 @@ import {
   CreateDatabaseManager,
   type DatabaseManagerInstance,
   LoggerService,
-} from '@frmscoe/frms-coe-lib';
+} from '{{orgname}}/frms-coe-lib';
 import {
   type RuleConfig,
   type RuleRequest,
   type RuleResult,
-} from '@frmscoe/frms-coe-lib/lib//interfaces';
+} from '{{orgname}}/frms-coe-lib/lib//interfaces';
 import { handleTransaction } from '../../src/{{rulename}}';
 
-jest.mock('@frmscoe/frms-coe-lib', () => {
-  const original = jest.requireActual('@frmscoe/frms-coe-lib');
+jest.mock('{{orgname}}/frms-coe-lib', () => {
+  const original = jest.requireActual('{{orgname}}/frms-coe-lib');
   return {
     ...original,
     aql: jest.fn(),

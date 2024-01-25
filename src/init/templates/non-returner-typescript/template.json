@@ -1,4 +1,4 @@
 {
   "name":"Non-Returner",
-  "description":"Generate a template that will not use determine outcome from rule executor (typescript)"
+  "description":"Generate a template that will use not determine outcome from rule executor (typescript)"
 }
