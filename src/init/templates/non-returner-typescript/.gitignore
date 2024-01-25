@@ -42,7 +42,7 @@ bower_components
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 
 build/Release
-cli
+build
 
 # Dependency directories
 
@@ -87,6 +87,8 @@ typings/
 Katalon Tests/Profiles/
 
 .vscode
+template
+templates
 dist
 .DS_Store
 lib

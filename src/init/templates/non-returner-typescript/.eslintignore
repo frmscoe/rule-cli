@@ -3,6 +3,7 @@
 **/__tests__
 tsconfig.json
 coverage
-cli
+templates
+build
 **/node_modules
 *.spec.ts

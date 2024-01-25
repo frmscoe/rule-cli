@@ -1,0 +1,4 @@
+{
+  "name":"Returner",
+  "description":"Generate a template that will use determine outcome from rule executor (typescript)"
+}
