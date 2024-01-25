@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+
+**/__tests__
+tsconfig.json
+coverage
+templates
+cli
+**/node_modules
+*.spec.ts

@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "outDir": "./cli",
+      "rootDir": "./src",
+      "strict": true
+    },
+    "exclude": [
+      "node_modules",
+      "cli",   // Exclude the "build" directory
+      "src/init/templates",
+      "src/module/modules"
+    ]
+  }
+  
