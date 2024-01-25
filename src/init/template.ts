@@ -9,6 +9,9 @@ const handleTemplating = async (): Promise<void> => {
   // The response from all of the questions
 
   let response: any = {};
+  console.log(
+    `Please ensure stable internet so cli can install successfully 🟢`,
+  );
 
   // Get the script's directory
   const scriptDir = path.dirname(require.main!.filename);
