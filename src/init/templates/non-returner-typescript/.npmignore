@@ -1,0 +1,17 @@
+src
+src/*.ts
+**/index.ts
+__tests__
+.editorconfig
+.eslintignore
+.eslintrc.js
+.github
+.husky
+.prettierrc.json
+jest.config.ts
+prettierrc.json
+tsconfig.json
+.vscode
+coverage
+.prettierignore
+project.eslint.json
