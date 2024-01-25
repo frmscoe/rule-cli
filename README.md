@@ -8,7 +8,7 @@
 ### Requirements
 - git
 - npm (node package manager)
-- node 16+
+- node v18+
 
 
 ```bash
