@@ -40,7 +40,7 @@ export async function handleTransaction(
 
 
   // Value to be evaluated
-  let value = 0
+  const value = 0
 
   // Rule Logic starts
   //

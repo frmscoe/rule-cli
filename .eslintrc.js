@@ -26,4 +26,5 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     'no-extend-native': [2, { exceptions: ['String'] }],
   },
+  ignorePatterns: ['src/init/templates/*'],
 };
