@@ -1,4 +1,4 @@
-r# Rule Command Line Interface Documentation
+# Rule Command Line Interface Documentation
 
 * * *
 
