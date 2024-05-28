@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { program } from 'commander';
 import handleTemplating from './init/template';
