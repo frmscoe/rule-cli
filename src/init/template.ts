@@ -208,7 +208,7 @@ const handleTemplating = async (): Promise<void> => {
 
       shell.exec('npm run start');
     } else {
-      console.error(`\nError installing dependecy err with ${code}`);
+      console.error(`\nError installing dependency err with ${code}`);
     }
     clearInterval(intervalId);
   });
