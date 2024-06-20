@@ -152,7 +152,7 @@ const handleTemplating = async (): Promise<void> => {
     '\nInstalling dependencies has started\nThis might take a minute, Please wait',
   );
   const intervalId = setInterval(() => {
-    updateLoadingIndicator('Installing dependancies...');
+    updateLoadingIndicator('Installing dependencies...');
   }, 150);
   shell.cd(response.name as string | undefined);
 
