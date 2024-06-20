@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises -- return Promise void where void are expected due to promise shelljs functions */
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -30,7 +31,7 @@ const handleStart = async (options: {
       const repositoryName = options.repoName;
       const branchName = options.branchName;
       console.log(
-        `Please ensure stable internet so cli can install successfully 🟢`,
+        'Please ensure stable internet so cli can install successfully 🟢',
       );
       shell.mkdir(`${scriptDir}/start/remote-rules`);
 
@@ -44,16 +45,15 @@ const handleStart = async (options: {
 
       shell.exec(`git checkout ${branchName}`);
 
-      shell.exec(`git pull`);
+      shell.exec('git pull');
 
       console.log(`Completed Cloning ${repositoryName} for testing`);
 
       console.log(`Started Install dependancy for ${repositoryName}`);
 
-      const intervalId = setInterval(
-        () => updateLoadingIndicator('Installing dependancies...'),
-        150,
-      );
+      const intervalId = setInterval(() => {
+        updateLoadingIndicator('Installing dependancies...');
+      }, 150);
 
       const childProcessInstall = shell.exec('npm ci', { async: true });
 
@@ -66,9 +66,9 @@ const handleStart = async (options: {
             async: true,
           });
 
-          childProcessBuild.on('exit', async (code) => {
+          childProcessBuild.on('exit', async (code): Promise<void> => {
             if (code === 0) {
-              shell.exec(`npm pack`);
+              shell.exec('npm pack');
 
               const ruleVersion = (await fs.readJsonSync('./package.json'))
                 .version as string;
@@ -96,9 +96,9 @@ const handleStart = async (options: {
                 `npm i rule@file:${scriptDir}/start/remote-rules/${repositoryName}/frmscoe-${repositoryName}-${ruleVersion}.tgz`,
               );
 
-              shell.exec(`npm run build`);
+              shell.exec('npm run build');
 
-              shell.exec(`npm run start`);
+              shell.exec('npm run start');
             }
           });
         }
@@ -151,7 +151,7 @@ const handleStart = async (options: {
       },
     ];
 
-    const onCancel = (prompt: any) => {
+    const onCancel = (prompt: any): boolean => {
       console.log('Never stop prompting!', prompt);
       return true;
     };
@@ -164,9 +164,9 @@ const handleStart = async (options: {
 
     shell.mkdir(`${scriptDir}/start/local-rules`);
 
-    shell.exec(`npm run build`);
+    shell.exec('npm run build');
 
-    shell.exec(`npm pack`);
+    shell.exec('npm pack');
 
     const ruleVersion = (await fs.readJsonSync('./package.json'))
       .version as string;
@@ -175,7 +175,7 @@ const handleStart = async (options: {
     ).replace('@frmscoe/', '');
 
     shell.mv(
-      `-f`,
+      '-f',
       `${currentCliDir}/frmscoe-${ruleName}-${ruleVersion}.tgz`,
       `${scriptDir}/start/local-rules`,
     );
@@ -201,11 +201,11 @@ const handleStart = async (options: {
       `npm i rule@file:${scriptDir}/start/local-rules/frmscoe-${ruleName}-${ruleVersion}.tgz`,
     );
 
-    shell.exec(`npm run build`);
+    shell.exec('npm run build');
 
-    if (options.openVs) shell.exec(`code .`);
+    if (options.openVs) shell.exec('code .');
 
-    shell.exec(`npm run start`);
+    shell.exec('npm run start');
   }
 };
 
