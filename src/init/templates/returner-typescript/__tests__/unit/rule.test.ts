@@ -66,7 +66,6 @@ const databaseManagerConfig = {
 
 const loggerService: LoggerService = new LoggerService();
 
-
 let databaseManager: DatabaseManagerInstance<typeof databaseManagerConfig>;
 
 beforeAll(async () => {
