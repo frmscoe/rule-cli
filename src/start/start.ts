@@ -52,7 +52,7 @@ const handleStart = async (options: {
       console.log(`Started Install dependancy for ${repositoryName}`);
 
       const intervalId = setInterval(() => {
-        updateLoadingIndicator('Installing dependancies...');
+        updateLoadingIndicator('Installing dependencies...');
       }, 150);
 
       const childProcessInstall = shell.exec('npm ci', { async: true });
