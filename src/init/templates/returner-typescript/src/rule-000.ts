@@ -38,13 +38,14 @@ export async function handleTransaction(
   if (!ruleConfig.config.exitConditions)
     throw new Error('Invalid config provided - exitConditions not provided');
 
-
   // Value to be evaluated
-  const value = 0
+  const value = 0;
 
   // Rule Logic starts
   //
-  /* databaseManager object Provide arango interaction e.g */loggerService.log(databaseManager.isReadyCheck())
+  /* databaseManager object Provide arango interaction e.g */ loggerService.log(
+    databaseManager.isReadyCheck(),
+  );
   //
   // Rule Logic ends
   return determineOutcome(value, ruleConfig, ruleRes);
@@ -52,5 +53,4 @@ export async function handleTransaction(
   // This function is implemented on the rule executer
   // Helps with determining the value to which band it falls under
   // From this rule configuration
-
 }

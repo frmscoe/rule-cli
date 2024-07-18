@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as shell from 'shelljs';
 import * as path from 'path';
@@ -12,10 +14,9 @@ const handleRemove = async (options: {
   const scriptDir = path.dirname(require.main!.filename);
 
   if (options.moduleName) {
-    const deleteLoader = setInterval(
-      () => updateLoadingIndicator('Deleting...'),
-      150,
-    );
+    const deleteLoader = setInterval(() => {
+      updateLoadingIndicator('Deleting...');
+    }, 150);
     await fs.remove(`${scriptDir}/module/modules/${options.moduleName}`);
     clearInterval(deleteLoader);
     console.log(`\nDone removing module ${options.moduleName} from modules`);
@@ -45,7 +46,7 @@ const handleRemove = async (options: {
       },
     ];
 
-    const onCancel = (prompt: any) => {
+    const onCancel = (prompt: any): boolean => {
       console.log('Never stop prompting!', prompt);
       return true;
     };
@@ -56,10 +57,9 @@ const handleRemove = async (options: {
       return;
     }
 
-    const deleteLoader = setInterval(
-      () => updateLoadingIndicator('Deleting...'),
-      150,
-    );
+    const deleteLoader = setInterval(() => {
+      updateLoadingIndicator('Deleting...');
+    }, 150);
 
     const nameVersion = options.ruleName.split('@');
     await fs.remove(
@@ -71,17 +71,17 @@ const handleRemove = async (options: {
     shell.sed(
       '-i',
       /FUNCTION_NAME.*/,
-      `FUNCTION_NAME='rule-901'`,
+      "FUNCTION_NAME='rule-901'",
       `${scriptDir}/module/modules/rule-executer/.env`,
     );
     shell.sed(
       '-i',
       /RULE_NAME=.*/,
-      `RULE_NAME='901'`,
+      "RULE_NAME='901'",
       `${scriptDir}/module/modules/rule-executer/.env`,
     );
 
-    shell.exec(`npm install @frmscoe/rule-901@latest`);
+    shell.exec('npm install @frmscoe/rule-901@latest');
 
     clearInterval(deleteLoader);
     console.log(`\nDone removing module ${options.moduleName} from modules`);

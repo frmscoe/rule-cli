@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+/* eslint-disable @typescript-eslint/no-misused-promises -- return Promise void where void are expected due to promise shelljs functions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as path from 'path';
 import * as prompts from 'prompts';
@@ -10,7 +12,7 @@ const handleTemplating = async (): Promise<void> => {
 
   let response: any = {};
   console.log(
-    `Please ensure stable internet so cli can install successfully 🟢`,
+    'Please ensure stable internet so cli can install successfully 🟢',
   );
 
   // Get the script's directory
@@ -21,7 +23,7 @@ const handleTemplating = async (): Promise<void> => {
       .name as string;
     if (packageName.includes('rule-')) {
       console.error(
-        'Please consider another root directory, this one seems to be a rule directory',
+        `Please consider another root directory, this one seems to be a rule directory package ${packageName} found`,
       );
       return;
     }
@@ -95,7 +97,7 @@ const handleTemplating = async (): Promise<void> => {
   }
 
   // On cancel
-  const onCancel = (prompt: any) => {
+  const onCancel = (prompt: any): boolean => {
     console.log('Never stop prompting!', prompt);
     return true;
   };
@@ -113,7 +115,7 @@ const handleTemplating = async (): Promise<void> => {
   }
 
   // Check if the project already exists
-  if (await fs.pathExists(response.name)) {
+  if (await fs.pathExists(response.name as string)) {
     // Ask if we should override
     const overwrite = await prompts({
       type: 'confirm',
@@ -126,26 +128,33 @@ const handleTemplating = async (): Promise<void> => {
     // Override the project if the user said yes
     if (overwrite.value === true) {
       // Remove old files
-      await fs.remove(response.name);
+      await fs.remove(response.name as string);
 
       // Copy the template
-      await copyTemplate(response.name, response.template, response.org);
+      await copyTemplate(
+        response.name as string,
+        response.template as string,
+        response.org as string,
+      );
     } else {
       return;
     }
   } else {
     // Copy the template
-    await copyTemplate(response.name, response.template, response.org);
+    await copyTemplate(
+      response.name as string,
+      response.template as string,
+      response.org as string,
+    );
   }
 
   console.log(
     '\nInstalling dependencies has started\nThis might take a minute, Please wait',
   );
-  const intervalId = setInterval(
-    () => updateLoadingIndicator('Installing dependancies...'),
-    150,
-  );
-  shell.cd(response.name);
+  const intervalId = setInterval(() => {
+    updateLoadingIndicator('Installing dependencies...');
+  }, 150);
+  shell.cd(response.name as string | undefined);
 
   const childProcess = shell.exec('npm i', { async: true });
 
@@ -169,7 +178,7 @@ const handleTemplating = async (): Promise<void> => {
       shell.mkdir(`${scriptDir}/start/local-rules`);
 
       shell.mv(
-        `-f`,
+        '-f',
         `${currentCliDir}/frmscoe-${ruleName}-${ruleVersion}.tgz`,
         `${scriptDir}/start/local-rules`,
       );
@@ -195,18 +204,22 @@ const handleTemplating = async (): Promise<void> => {
         `npm i rule@file:${scriptDir}/start/local-rules/frmscoe-${ruleName}-${ruleVersion}.tgz`,
       );
 
-      shell.exec(`npm run build`);
+      shell.exec('npm run build');
 
-      shell.exec(`npm run start`);
+      shell.exec('npm run start');
     } else {
-      console.error(`\nError installing dependecy err with ${code}`);
+      console.error(`\nError installing dependency err with ${code}`);
     }
     clearInterval(intervalId);
   });
 };
 
 // Copy the template
-async function copyTemplate(name: string, template: string, orgName: string) {
+async function copyTemplate(
+  name: string,
+  template: string,
+  orgName: string,
+): Promise<void> {
   // Copy all of the files except the template.json file
 
   const destFileUrls: string[] = [''];
@@ -224,8 +237,12 @@ async function copyTemplate(name: string, template: string, orgName: string) {
         return true;
       },
     })
-    .then(() => console.log(''))
-    .catch((error) => console.error('Error:', error));
+    .then(() => {
+      console.log('');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 
   for (const currentPath of destFileUrls) {
     if (
@@ -236,7 +253,7 @@ async function copyTemplate(name: string, template: string, orgName: string) {
       currentPath.includes('README.md') ||
       currentPath.includes('package.json') ||
       currentPath.includes('.npmrc') ||
-      currentPath.includes(`rule-000.ts`)
+      currentPath.includes('rule-000.ts')
     ) {
       await editContentOfFile(
         currentPath,

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { program } from 'commander';
 import handleTemplating from './init/template';
 import handleModuleManagement from './module/module';
@@ -32,9 +31,15 @@ program
     '-s, --env-source [source-address]',
     'Local address of .env that can be used with this module',
   )
-  .action((action: any, modulename: any, options: any) => {
-    handleModuleManagement(action, modulename, options);
-  });
+  .action(
+    (
+      action: string,
+      modulename: string,
+      options: { envSource?: string | undefined },
+    ) => {
+      handleModuleManagement(action, modulename, options);
+    },
+  );
 
 program
   .command('start')
@@ -42,11 +47,17 @@ program
   .option('-b, --branch-name <branchname>', 'Specify a branch to pull')
   .option('-o, --open-vs', 'Open visual studio code')
   .description(
-    `Start a rule project, Note you can't start the rule project without rule-executor module, every rule module will listern to default port`,
+    "Start a rule project, Note you can't start the rule project without rule-executor module, every rule module will listern to default port",
   )
-  .action((option: any) => {
-    handleStart(option);
-  });
+  .action(
+    (option: {
+      branchName?: string | undefined;
+      repoName: string;
+      openVs: boolean;
+    }) => {
+      handleStart(option);
+    },
+  );
 
 program
   .command('remove')
@@ -55,9 +66,14 @@ program
     'Specify a rule name to remove format: rule-000@1.0.0',
   )
   .option('-m, --module-name <modulename>', 'Specify a module name to remove')
-  .description(`Remove a rule from the cli host or module`)
-  .action((option: any) => {
-    handleRemove(option);
-  });
+  .description('Remove a rule from the cli host or module')
+  .action(
+    (option: {
+      ruleName?: string | undefined;
+      moduleName?: string | undefined;
+    }) => {
+      handleRemove(option);
+    },
+  );
 
 program.parse(process.argv);

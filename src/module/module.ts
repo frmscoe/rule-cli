@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+/* eslint-disable @typescript-eslint/no-misused-promises -- return Promise void where void are expected due to promise shelljs functions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as shell from 'shelljs';
 import * as path from 'path';
@@ -26,7 +28,7 @@ const handleModuleManagement = async (
   if (options.envSource) {
     const envPath = options.envSource?.substring(1, options.envSource.length);
 
-    if (!fs.existsSync(envPath!)) {
+    if (!fs.existsSync(envPath)) {
       console.log('The supplied source url is not valid it does not exist');
       return;
     }
@@ -72,10 +74,9 @@ const handleModuleManagement = async (
   }
 
   if (action === 'remove') {
-    const deleteLoader = setInterval(
-      () => updateLoadingIndicator('Deleting...'),
-      150,
-    );
+    const deleteLoader = setInterval(() => {
+      updateLoadingIndicator('Deleting...');
+    }, 150);
     await fs.remove(`${scriptDir}/module/modules/${modulename}`);
     clearInterval(deleteLoader);
     console.log(`\nDone removing module ${modulename} from modules`);
@@ -89,7 +90,7 @@ const handleModuleManagement = async (
     }
 
     console.log(
-      `Please ensure stable internet so cli can install successfully 🟢`,
+      'Please ensure stable internet so cli can install successfully 🟢',
     );
 
     shell.mkdir(`${scriptDir}/module/modules`);
@@ -102,7 +103,7 @@ const handleModuleManagement = async (
 
     console.log(`Completed Cloning ${modulename} as a module of rule-cli`);
 
-    shell.cd(modulename);
+    shell.cd(modulename as string);
 
     shell.cp(
       '-f',
@@ -112,10 +113,9 @@ const handleModuleManagement = async (
 
     console.log(`Started Install dependancy for ${modulename}`);
 
-    const intervalId = setInterval(
-      () => updateLoadingIndicator('Installing dependancies...'),
-      150,
-    );
+    const intervalId = setInterval(() => {
+      updateLoadingIndicator('Installing dependancies...');
+    }, 150);
 
     const childProcessInstall = shell.exec('npm ci', { async: true });
 
@@ -123,10 +123,9 @@ const handleModuleManagement = async (
       if (code === 0) {
         console.log(`Finished Installing module ${modulename}`);
 
-        const intervalIdBuild = setInterval(
-          () => updateLoadingIndicator('Building...'),
-          150,
-        );
+        const intervalIdBuild = setInterval(() => {
+          updateLoadingIndicator('Building...');
+        }, 150);
         const childProcessBuild = shell.exec('npm run build', { async: true });
 
         childProcessBuild.on('exit', async (code) => {
