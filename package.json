@@ -46,7 +46,7 @@
     "lint-staged": "^15.2.5",
     "prettier": "^3.3.1",
     "robocopy": "^0.1.16",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4"
   },
   "lint-staged": {
     "*.{js,ts}": [
